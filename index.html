@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Simulador práctico de autenticación y control de acceso: JWT, seguridad de credenciales, Angular guards, sesiones y CORS." />
+  <title>Misión Acceso Seguro | Simulador</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">K</div>
+        <div>
+          <p class="eyebrow">Taller de Programación Web</p>
+          <h1>Misión Acceso Seguro</h1>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="score-chip" id="scoreChip">0 / 6 misiones</span>
+        <button class="ghost-btn" id="resetAllBtn" type="button">↺ Reiniciar simulador</button>
+      </div>
+    </header>
+
+    <div class="progress-wrap">
+      <div class="progress-track" aria-label="Progreso del simulador">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">Introducción</div>
+    </div>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Navegación por misiones">
+        <button class="nav-item active" data-screen="intro">
+          <span class="nav-index">00</span>
+          <span>Contexto</span>
+        </button>
+        <button class="nav-item locked" data-screen="m1">
+          <span class="nav-index">01</span>
+          <span>Autenticación</span>
+        </button>
+        <button class="nav-item locked" data-screen="m2">
+          <span class="nav-index">02</span>
+          <span>JWT</span>
+        </button>
+        <button class="nav-item locked" data-screen="m3">
+          <span class="nav-index">03</span>
+          <span>HTTP</span>
+        </button>
+        <button class="nav-item locked" data-screen="m4">
+          <span class="nav-index">04</span>
+          <span>Guard</span>
+        </button>
+        <button class="nav-item locked" data-screen="m5">
+          <span class="nav-index">05</span>
+          <span>Sesión</span>
+        </button>
+        <button class="nav-item locked" data-screen="m6">
+          <span class="nav-index">06</span>
+          <span>CORS</span>
+        </button>
+        <button class="nav-item locked" data-screen="final">
+          <span class="nav-index">✓</span>
+          <span>Integración</span>
+        </button>
+      </aside>
+
+      <section class="workspace">
+        <section class="screen active" id="intro">
+          <div class="hero">
+            <div class="hero-copy">
+              <span class="status-badge">SIMULADOR PRÁCTICO</span>
+              <h2>Recupera la seguridad de una aplicación Angular</h2>
+              <p>
+                Te incorporas como desarrollador web a un equipo que está preparando el lanzamiento
+                de una aplicación. Durante las pruebas se detectaron problemas en el inicio de sesión,
+                los tokens, las rutas protegidas, la sesión y la comunicación con la API.
+              </p>
+              <p>
+                Tu misión será identificar las fallas, modificar configuraciones, completar código y
+                ejecutar pruebas hasta conseguir que únicamente los usuarios autorizados accedan a los recursos.
+              </p>
+              <div class="mission-flow" aria-label="Flujo integrado">
+                <span>Angular</span><b>→</b><span>Login</span><b>→</b><span>JWT</span><b>→</b>
+                <span>Guard</span><b>→</b><span>Ruta protegida</span><b>→</b>
+                <span>HTTP</span><b>→</b><span>CORS</span><b>→</b><span>API</span>
+              </div>
+              <div class="hero-actions">
+                <button class="primary-btn" id="startBtn" type="button">Iniciar misión</button>
+                <button class="secondary-btn" id="howBtn" type="button">¿Cómo funciona?</button>
+              </div>
+            </div>
+            <div class="hero-panel">
+              <div class="terminal-head">
+                <span></span><span></span><span></span>
+                <strong>security-audit.log</strong>
+              </div>
+              <pre class="terminal"><code>[ALERTA] contraseña predeterminada detectada
+[ALERTA] /admin permite acceso incorrecto
+[ALERTA] token reutilizable después de logout
+[ALERTA] solicitud bloqueada por CORS
+
+OBJETIVO:
+resolver 6 incidentes de seguridad
+sin quedar bloqueado en el proceso.</code></pre>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <article class="info-card">
+              <h3>Aprender haciendo</h3>
+              <p>Escribirás código, completarás cabeceras HTTP, inspeccionarás tokens y ejecutarás pruebas.</p>
+            </article>
+            <article class="info-card">
+              <h3>Error seguro</h3>
+              <p>Puedes probar, equivocarte, reiniciar una misión y volver a ejecutar sin afectar ningún sistema real.</p>
+            </article>
+            <article class="info-card">
+              <h3>Pistas progresivas</h3>
+              <p>El botón “Pista / Ayuda” está disponible en todas las misiones y ofrece hasta tres niveles de apoyo.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="m1">
+          <div class="mission-header">
+            <div>
+              <span class="mission-number">MISIÓN 01</span>
+              <h2>Detecta el fallo de autenticación</h2>
+              <p>El sistema utiliza credenciales predeterminadas y carece de controles frente a intentos automatizados.</p>
+            </div>
+            <div class="mission-state" id="m1State">Pendiente</div>
+          </div>
+
+          <div class="three-col">
+            <article class="panel">
+              <h3>Incidente</h3>
+              <div class="credential-box">
+                <div><span>Usuario</span><strong>admin</strong></div>
+                <div><span>Contraseña</span><strong>admin</strong></div>
+                <div><span>Rol</span><strong>administrador</strong></div>
+              </div>
+              <p class="muted">Selecciona los controles que aplicarías antes de permitir el despliegue.</p>
+            </article>
+
+            <article class="panel">
+              <h3>Controles disponibles</h3>
+              <div class="choice-list" id="m1Choices">
+                <label><input type="checkbox" value="strong"> Exigir una contraseña robusta</label>
+                <label><input type="checkbox" value="hash"> Almacenar contraseñas mediante un mecanismo de hash adecuado</label>
+                <label><input type="checkbox" value="mfa"> Implementar MFA cuando sea posible</label>
+                <label><input type="checkbox" value="limit"> Limitar o retrasar progresivamente intentos fallidos</label>
+                <label><input type="checkbox" value="plaintext"> Guardar la contraseña en texto plano</label>
+                <label><input type="checkbox" value="unlimited"> Permitir intentos ilimitados</label>
+                <label><input type="checkbox" value="keep"> Mantener admin/admin porque es fácil de recordar</label>
+              </div>
+              <button class="primary-btn wide" id="m1Run" type="button">▶ Ejecutar auditoría</button>
+            </article>
+
+            <article class="panel result-panel">
+              <h3>Resultado</h3>
+              <div class="system-output" id="m1Output">Selecciona los controles y ejecuta la auditoría.</div>
+              <div class="micro-note">
+                <strong>Nota técnica:</strong> en sistemas reales no se deben almacenar contraseñas de forma reversible.
+                Este simulador evalúa el criterio de seguridad, no implementa almacenamiento real.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="m2">
+          <div class="mission-header">
+            <div>
+              <span class="mission-number">MISIÓN 02</span>
+              <h2>Construye e inspecciona el JWT</h2>
+              <p>Genera un token, identifica sus tres segmentos y comprueba qué ocurre si alguien altera el payload.</p>
+            </div>
+            <div class="mission-state" id="m2State">Pendiente</div>
+          </div>
+
+          <div class="two-col">
+            <article class="panel">
+              <h3>Datos del token</h3>
+              <label class="field-label">HEADER</label>
+              <textarea class="code-area compact" id="jwtHeader" spellcheck="false">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</textarea>
+
+              <label class="field-label">PAYLOAD</label>
+              <textarea class="code-area" id="jwtPayload" spellcheck="false">{
+  "sub": "user-204",
+  "role": "admin",
+  "exp": 1790996400
+}</textarea>
+
+              <div class="button-row">
+                <button class="primary-btn" id="generateJwt" type="button">Generar token</button>
+                <button class="secondary-btn" id="tamperJwt" type="button" disabled>Alterar rol</button>
+                <button class="secondary-btn" id="verifyJwt" type="button" disabled>Verificar firma</button>
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>JWT generado</h3>
+              <div class="jwt-visual" id="jwtVisual">
+                <span class="jwt-empty">Aún no se ha generado un token.</span>
+              </div>
+
+              <div class="legend">
+                <span><i class="dot header-dot"></i> Encabezado</span>
+                <span><i class="dot payload-dot"></i> Carga útil</span>
+                <span><i class="dot signature-dot"></i> Firma</span>
+              </div>
+
+              <div class="system-output" id="m2Output">
+                Genera el token para comenzar la inspección.
+              </div>
+
+              <div class="micro-note">
+                La firma se calcula localmente con HMAC-SHA256 para fines didácticos. La clave está embebida
+                deliberadamente en el simulador y <strong>no representa una arquitectura segura de producción</strong>.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="m3">
+          <div class="mission-header">
+            <div>
+              <span class="mission-number">MISIÓN 03</span>
+              <h2>Completa la solicitud autenticada</h2>
+              <p>La API responde <code>401 Unauthorized</code>. Agrega la credencial en el encabezado correcto.</p>
+            </div>
+            <div class="mission-state" id="m3State">Pendiente</div>
+          </div>
+
+          <div class="two-col">
+            <article class="panel">
+              <h3>Solicitud HTTP</h3>
+              <textarea class="code-area http-area" id="httpRequest" spellcheck="false">GET /api/profile HTTP/1.1
+Host: api.app.edu
+Content-Type: application/json
+
+# agrega aquí el encabezado que falta</textarea>
+              <div class="button-row">
+                <button class="primary-btn" id="m3Run" type="button">▶ Enviar solicitud</button>
+                <button class="secondary-btn" id="insertTokenBtn" type="button">Insertar token generado</button>
+              </div>
+            </article>
+
+            <article class="panel result-panel">
+              <h3>Respuesta del servidor</h3>
+              <pre class="terminal light" id="m3Response"><code>HTTP/1.1 401 Unauthorized
+
+{
+  "error": "missing_credentials"
+}</code></pre>
+              <div class="system-output" id="m3Output">Incluye el JWT con el esquema esperado por el servidor.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="m4">
+          <div class="mission-header">
+            <div>
+              <span class="mission-number">MISIÓN 04</span>
+              <h2>Programa el Guard de Angular</h2>
+              <p>Solo un usuario autenticado con rol <code>admin</code> debe acceder a <code>/admin</code>.</p>
+            </div>
+            <div class="mission-state" id="m4State">Pendiente</div>
+          </div>
+
+          <div class="two-col">
+            <article class="panel">
+              <h3>admin.guard.ts</h3>
+              <textarea class="code-area guard-area" id="guardCode" spellcheck="false">export const adminGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+
+  // Completa la lógica del guard
+
+};</textarea>
+              <button class="primary-btn wide" id="m4Run" type="button">▶ Ejecutar pruebas</button>
+            </article>
+
+            <article class="panel">
+              <h3>Pruebas automáticas</h3>
+              <div class="test-list" id="guardTests">
+                <div class="test-item pending"><span>○</span> No autenticado → BLOQUEADO</div>
+                <div class="test-item pending"><span>○</span> Autenticado / user → BLOQUEADO</div>
+                <div class="test-item pending"><span>○</span> Autenticado / admin → PERMITIDO</div>
+              </div>
+              <div class="system-output" id="m4Output">Escribe la condición y ejecuta la batería de pruebas.</div>
+              <div class="micro-note">
+                El simulador analiza la estructura de tu solución; no ejecuta TypeScript arbitrario.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="m5">
+          <div class="mission-header">
+            <div>
+              <span class="mission-number">MISIÓN 05</span>
+              <h2>Corrige la gestión de sesión</h2>
+              <p>Después del cierre de sesión, un token antiguo sigue permitiendo el acceso al recurso protegido.</p>
+            </div>
+            <div class="mission-state" id="m5State">Pendiente</div>
+          </div>
+
+          <div class="three-col">
+            <article class="panel">
+              <h3>Antes del logout</h3>
+              <pre class="terminal light"><code>GET /api/admin
+Authorization: Bearer TOKEN-A
+
+→ 200 OK</code></pre>
+            </article>
+
+            <article class="panel">
+              <h3>Selecciona las acciones</h3>
+              <div class="choice-list" id="m5Choices">
+                <label><input type="checkbox" value="invalidate"> Invalidar la sesión o el token según la estrategia definida</label>
+                <label><input type="checkbox" value="remove"> Eliminar las credenciales almacenadas en el cliente</label>
+                <label><input type="checkbox" value="expiry"> Aplicar expiración e inactividad</label>
+                <label><input type="checkbox" value="keep"> Mantener el token activo para facilitar el reingreso</label>
+              </div>
+              <button class="primary-btn wide" id="m5Run" type="button">Cerrar sesión y probar token</button>
+            </article>
+
+            <article class="panel result-panel">
+              <h3>Después del logout</h3>
+              <pre class="terminal light" id="m5Terminal"><code>GET /api/admin
+Authorization: Bearer TOKEN-A
+
+→ ?</code></pre>
+              <div class="system-output" id="m5Output">Configura el comportamiento del cierre de sesión.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="m6">
+          <div class="mission-header">
+            <div>
+              <span class="mission-number">MISIÓN 06</span>
+              <h2>Resuelve el problema CORS</h2>
+              <p>El frontend y la API están en orígenes distintos. Configura la respuesta del servidor.</p>
+            </div>
+            <div class="mission-state" id="m6State">Pendiente</div>
+          </div>
+
+          <div class="two-col">
+            <article class="panel">
+              <h3>Escenario</h3>
+              <div class="origin-flow">
+                <div class="origin-card">
+                  <span>FRONTEND</span>
+                  <strong>http://localhost:4200</strong>
+                </div>
+                <div class="origin-arrow">⇄</div>
+                <div class="origin-card">
+                  <span>API</span>
+                  <strong>https://api.segura.edu</strong>
+                </div>
+              </div>
+
+              <div class="cors-form">
+                <label>
+                  Access-Control-Allow-Origin
+                  <input id="corsOrigin" value="*" />
+                </label>
+                <label>
+                  Access-Control-Allow-Methods
+                  <input id="corsMethods" value="GET, POST" />
+                </label>
+                <label>
+                  Access-Control-Allow-Headers
+                  <input id="corsHeaders" value="Content-Type" />
+                </label>
+                <label class="inline-check">
+                  <input type="checkbox" id="corsCreds" checked />
+                  Access-Control-Allow-Credentials: true
+                </label>
+              </div>
+
+              <button class="primary-btn wide" id="m6Run" type="button">▶ Ejecutar preflight OPTIONS</button>
+            </article>
+
+            <article class="panel result-panel">
+              <h3>Consola del navegador</h3>
+              <pre class="terminal light" id="corsConsole"><code>Access to fetch at
+'https://api.segura.edu/profile'
+from origin
+'http://localhost:4200'
+has been blocked by CORS policy.</code></pre>
+              <div class="system-output" id="m6Output">
+                La solicitud utiliza credenciales. Revisa cuidadosamente el origen y las cabeceras permitidas.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="final">
+          <div class="final-wrap">
+            <span class="status-badge">MISIÓN FINAL</span>
+            <h2>Flujo de acceso seguro recuperado</h2>
+            <p>Has conectado las piezas del proceso y comprobado cómo interactúan autenticación, autorización, sesión y comunicación entre orígenes.</p>
+
+            <div class="final-flow">
+              <div>Componente Angular</div><span>→</span>
+              <div>Inicio de sesión</div><span>→</span>
+              <div>JWT</div><span>→</span>
+              <div>Guard</div><span>→</span>
+              <div>Ruta protegida</div><span>→</span>
+              <div>HTTP</div><span>→</span>
+              <div>CORS</div><span>→</span>
+              <div>API</div>
+            </div>
+
+            <div class="final-grid">
+              <article class="final-card" id="finalAuth"><span>○</span><div><strong>Autenticación</strong><small>Credenciales y controles</small></div></article>
+              <article class="final-card" id="finalJwt"><span>○</span><div><strong>JWT</strong><small>Estructura y firma</small></div></article>
+              <article class="final-card" id="finalHttp"><span>○</span><div><strong>HTTP</strong><small>Bearer token</small></div></article>
+              <article class="final-card" id="finalGuard"><span>○</span><div><strong>Guard</strong><small>Autenticación + rol</small></div></article>
+              <article class="final-card" id="finalSession"><span>○</span><div><strong>Sesión</strong><small>Logout y expiración</small></div></article>
+              <article class="final-card" id="finalCors"><span>○</span><div><strong>CORS</strong><small>Origen y preflight</small></div></article>
+            </div>
+
+            <div class="completion-box" id="completionBox">
+              <h3>Completa las seis misiones</h3>
+              <p>Cuando todas estén correctas, esta pantalla mostrará el cierre del simulador.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <button class="help-fab" id="helpBtn" type="button" aria-label="Abrir pista o ayuda">💡 Pista / Ayuda</button>
+
+  <div class="modal hidden" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <button class="modal-close" id="closeHelp" type="button" aria-label="Cerrar">×</button>
+      <span class="mission-number" id="helpLevel">AYUDA</span>
+      <h2 id="helpTitle">Pista</h2>
+      <div id="helpContent"></div>
+      <div class="button-row modal-actions">
+        <button class="secondary-btn" id="nextHint" type="button">Mostrar otra pista</button>
+        <button class="primary-btn" id="closeHelp2" type="button">Volver al simulador</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="howModal" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+    <div class="modal-card">
+      <button class="modal-close" id="closeHow" type="button" aria-label="Cerrar">×</button>
+      <span class="mission-number">GUÍA RÁPIDA</span>
+      <h2 id="howTitle">¿Cómo funciona?</h2>
+      <ol class="how-list">
+        <li>Lee el incidente de cada misión.</li>
+        <li>Configura, selecciona o programa la solución solicitada.</li>
+        <li>Pulsa <strong>Ejecutar</strong> para comprobar el comportamiento.</li>
+        <li>Si no sabes cómo continuar, usa <strong>Pista / Ayuda</strong>.</li>
+        <li>Cada misión aprobada desbloquea la siguiente.</li>
+      </ol>
+      <button class="primary-btn wide" id="closeHow2" type="button">Entendido</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
